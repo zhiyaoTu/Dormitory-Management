@@ -23,11 +23,12 @@ class RoomAvailability {
         status: json["status"],
         statusCode: json["statusCode"],
         result:
-            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
+        List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
         error: json["error"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "status": status,
         "statusCode": statusCode,
         "result": List<dynamic>.from(result.map((x) => x.toJson())),
@@ -56,7 +57,8 @@ class Result {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory Result.fromJson(Map<String, dynamic> json) =>
+      Result(
         roomNumber: json["roomNumber"],
         roomCapacity: json["roomCapacity"],
         roomCurrentCapacity: json["roomCurrentCapacity"],
@@ -67,7 +69,8 @@ class Result {
         blockId: BlockId.fromJson(json["blockId"]),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "roomNumber": roomNumber,
         "roomCapacity": roomCapacity,
         "roomCurrentCapacity": roomCurrentCapacity,
@@ -94,14 +97,16 @@ class BlockId {
 
   String toRawJson() => json.encode(toJson());
 
-  factory BlockId.fromJson(Map<String, dynamic> json) => BlockId(
+  factory BlockId.fromJson(Map<String, dynamic> json) =>
+      BlockId(
         blockId: json["blockId"],
         block: json["block"],
         blockName: json["blockName"],
         blockOwner: json["blockOwner"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "blockId": blockId,
         "block": block,
         "blockName": blockName,
@@ -123,12 +128,14 @@ class RoomType {
 
   String toRawJson() => json.encode(toJson());
 
-  factory RoomType.fromJson(Map<String, dynamic> json) => RoomType(
+  factory RoomType.fromJson(Map<String, dynamic> json) =>
+      RoomType(
         roomId: json["roomId"],
         roomType: json["roomType"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "roomId": roomId,
         "roomType": roomType,
       };

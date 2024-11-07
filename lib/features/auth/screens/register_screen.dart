@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 heightSpacer(80),
                 Center(
                   child: Image.asset(
-                    'assets/logo.jpg',
+                    'assets/images/logo.jpg',
                     width: 150.w,
                     height: 150.h,
                   ),

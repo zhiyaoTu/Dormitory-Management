@@ -1,13 +1,14 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hostel_management/api_services/api_provider.dart';
 import 'package:hostel_management/api_services/api_utils.dart';
 import 'package:hostel_management/features/auth/screens/login_screen.dart';
 import 'package:hostel_management/features/home/screens/home_screen.dart';
-import 'package:hostel_management/models/user_response.dart';
-import 'package:hostel_management/theme/colors.dart';
 import 'package:provider/provider.dart';
+
+import '../features/main_tab.dart';
 
 class ApiCall {
   Future<void> handleLogin(
@@ -15,61 +16,67 @@ class ApiCall {
     String email,
     String password,
   ) async {
-    final apiProvider = Provider.of<ApiProvider>(context, listen: false);
-    // final userProvider = Provider.of<UserProvider>(context, listen: false);
-
-    final Map<String, dynamic> requestData = {
-      "emailId": email,
-      "password": password,
-    };
-
-    final response = await apiProvider.postRequest(
-      ApiUrls.login,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: requestData,
-      includeBearerToken: false,
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MainTab(),
+      ),
     );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      if (responseBody['status'] == 'FAILED') {
-        print('heyyeyyy');
-        ApiUtils.showErrorSnackBar(context, responseBody['error']);
-      }
-      final UserResponse userResponse = UserResponse.fromJson(responseBody);
-
-      print("User ID: ${userResponse.result[0].emailId}");
-
-      ApiUrls.email = userResponse.result[0].emailId!;
-      ApiUrls.phoneNumber = userResponse.result[0].phoneNumber!.toString();
-      ApiUrls.roomNumber = userResponse.result[0].roomNumber!.toString();
-      ApiUrls.username = userResponse.result[0].userName;
-      ApiUrls.blockNumber = userResponse.result[0].block!;
-      ApiUrls.firstName = userResponse.result[0].firstName!;
-      ApiUrls.lastName = userResponse.result[0].lastName!;
-      ApiUrls.roleId = userResponse.result[0].roleId!.roleId;
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } else {
-      final Map<String, dynamic> errorResponse = json.decode(response.body);
-      final String errorMessage = errorResponse['msg'];
-      print("Error message: $errorMessage");
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.kGreenColor,
-          content: Text(errorMessage),
-        ),
-      );
-    }
+    // final apiProvider = Provider.of<ApiProvider>(context, listen: false);
+    // // final userProvider = Provider.of<UserProvider>(context, listen: false);
+    //
+    // final Map<String, dynamic> requestData = {
+    //   "emailId": email,
+    //   "password": password,
+    // };
+    //
+    // final response = await apiProvider.postRequest(
+    //   ApiUrls.login,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: requestData,
+    //   includeBearerToken: false,
+    // );
+    //
+    // if (response.statusCode == 200) {
+    //   final Map<String, dynamic> responseBody = json.decode(response.body);
+    //   if (responseBody['status'] == 'FAILED') {
+    //     print('heyyeyyy');
+    //     ApiUtils.showErrorSnackBar(context, responseBody['error']);
+    //   }
+    //   final UserResponse userResponse = UserResponse.fromJson(responseBody);
+    //
+    //   print("User ID: ${userResponse.result[0].emailId}");
+    //
+    //   ApiUrls.email = userResponse.result[0].emailId!;
+    //   ApiUrls.phoneNumber = userResponse.result[0].phoneNumber!.toString();
+    //   ApiUrls.roomNumber = userResponse.result[0].roomNumber!.toString();
+    //   ApiUrls.username = userResponse.result[0].userName;
+    //   ApiUrls.blockNumber = userResponse.result[0].block!;
+    //   ApiUrls.firstName = userResponse.result[0].firstName!;
+    //   ApiUrls.lastName = userResponse.result[0].lastName!;
+    //   ApiUrls.roleId = userResponse.result[0].roleId!.roleId;
+    //
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => const HomeScreen(),
+    //     ),
+    //   );
+    // } else {
+    //   final Map<String, dynamic> errorResponse = json.decode(response.body);
+    //   final String errorMessage = errorResponse['msg'];
+    //   print("Error message: $errorMessage");
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       backgroundColor: AppColors.kGreenColor,
+    //       content: Text(errorMessage),
+    //     ),
+    //   );
+    // }
   }
 
   Future<String?> registerStudent(

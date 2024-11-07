@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,12 +13,26 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   // final isUserLoggedIn = await checkUserLoginStatus();
+  // HttpOverrides.global = MyProxyHttpOverride();
 
   runApp(
     const MyApp(
         // isUserLoggedIn: isUserLoggedIn,
         ),
   );
+}
+
+class MyProxyHttpOverride extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..findProxy = (uri) {
+        return "PROXY 192.168.11.15:9090;"; // deviceの場合
+        // return "PROXY localhost:9090;"; // シミュレーター
+      }
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 // Future<bool> checkUserLoginStatus() async {
@@ -27,6 +43,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool isUserLoggedIn;
+
   const MyApp({super.key, this.isUserLoggedIn = false});
 
   @override

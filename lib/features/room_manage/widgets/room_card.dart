@@ -1,84 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hostel_management/api_services/api_provider.dart';
-import 'package:hostel_management/api_services/api_utils.dart';
-import 'package:hostel_management/common/app_bar.dart';
 import 'package:hostel_management/common/constants.dart';
 import 'package:hostel_management/common/spacing.dart';
 import 'package:hostel_management/features/student/screens/change_room_screen.dart';
 import 'package:hostel_management/models/room_availability_model.dart';
-import 'package:provider/provider.dart';
 
-class RoomAvailabilityScreen extends StatefulWidget {
-  const RoomAvailabilityScreen({super.key});
-
-  @override
-  State<RoomAvailabilityScreen> createState() => _RoomAvailabilityScreenState();
-}
-
-class _RoomAvailabilityScreenState extends State<RoomAvailabilityScreen> {
-  RoomAvailability? roomAvailabile;
-
-  Future<void> fetchData() async {
-    try {
-      final apiProvider = Provider.of<ApiProvider>(context, listen: false);
-      final roomAvailability =
-          await apiProvider.getRequest(ApiUrls.roomAvailability);
-
-      if (roomAvailability.statusCode == 200) {
-        final Map<String, dynamic> room = json.decode(roomAvailability.body);
-        print(roomAvailability.body);
-
-        roomAvailabile = RoomAvailability.fromJson(room);
-      } else {
-        print('Failed to fetch data');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(context, 'Room Availabilities'),
-      body: FutureBuilder(
-        future: fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            return roomAvailabile == null
-                ? const Center(
-                    child: Text(
-                      "No Availability",
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: roomAvailabile!.result.length,
-                      itemBuilder: (context, index) {
-                        final room = roomAvailabile!.result[index];
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10.h),
-                          child: RoomCard(room: room),
-                        );
-                      },
-                    ),
-                  );
-          }
-        },
-      ),
-    );
-  }
-}
+import '../../../theme/colors.dart';
 
 class RoomCard extends StatelessWidget {
   final Result room;
@@ -92,18 +20,18 @@ class RoomCard extends StatelessWidget {
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(width: 2, color: Color(0xFF007B3B)),
+          side: const BorderSide(width: 2, color: AppColors.kPrimaryColor),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30.r),
             topRight: Radius.circular(30.r),
             bottomLeft: Radius.circular(30.r),
           ),
         ),
-        shadows: const [
+        shadows:  [
           BoxShadow(
-            color: Color(0x4C007B3B),
+            color: AppColors.kPrimaryColor.withOpacity(0.5),
             blurRadius: 8,
-            offset: Offset(1, 4),
+            offset: const Offset(1, 4),
             spreadRadius: 0,
           )
         ],
@@ -119,7 +47,8 @@ class RoomCard extends StatelessWidget {
                 width: 70.w,
               ),
               Text(
-                'Room no. - ${room.roomNumber}',
+                // 'Room no. - ${room.roomNumber}',
+                '进门右手靠冰箱',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: const Color(0xFF333333),
@@ -134,7 +63,7 @@ class RoomCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Block ${room.blockId.block}',
+                '编号 ${room.blockId.block}',
                 style: TextStyle(
                   color: const Color(0xFF333333),
                   fontSize: 16.sp,
@@ -142,7 +71,7 @@ class RoomCard extends StatelessWidget {
               ),
               heightSpacer(5),
               Text(
-                'Capacity: ${room.roomCapacity}',
+                '可住人数: ${room.roomCapacity}',
                 style: TextStyle(
                   color: const Color(0xFF333333),
                   fontSize: 16.sp,
@@ -150,7 +79,7 @@ class RoomCard extends StatelessWidget {
               ),
               heightSpacer(5),
               Text(
-                'Current Capacity: ${room.roomCurrentCapacity}',
+                '当前人数: ${room.roomCurrentCapacity}',
                 style: TextStyle(
                   color: const Color(0xFF333333),
                   fontSize: 16.sp,
@@ -159,7 +88,7 @@ class RoomCard extends StatelessWidget {
               heightSpacer(5),
               if (room.roomType != null)
                 Text(
-                  'Type: ${room.roomType!.roomType}',
+                  '类型: ${room.roomType!.roomType}',
                   style: TextStyle(
                     color: const Color(0xFF333333),
                     fontSize: 16.sp,
@@ -169,7 +98,7 @@ class RoomCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Status: ',
+                    '状态: ',
                     style: TextStyle(
                       color: const Color(0xFF333333),
                       fontSize: 16.sp,
@@ -196,7 +125,7 @@ class RoomCard extends StatelessWidget {
                     ),
                     child: room.roomCurrentCapacity == 5
                         ? Text(
-                            'Unavailable',
+                            '使用中',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white,
@@ -215,7 +144,7 @@ class RoomCard extends StatelessWidget {
                               );
                             },
                             child: Text(
-                              'Available',
+                              '可用',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white,

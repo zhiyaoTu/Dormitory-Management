@@ -8,6 +8,8 @@ import 'package:hostel_management/features/auth/widgets/custom_text_field.dart';
 import 'package:hostel_management/theme/colors.dart';
 import 'package:hostel_management/theme/text_theme.dart';
 
+import '../../home/screens/home_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -32,8 +34,8 @@ class LoginBody extends StatefulWidget {
 
 class _LoginBodyState extends State<LoginBody> {
   static final _formKey = GlobalKey<FormState>();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController(text: 'admin@gmail.com');
+  TextEditingController password = TextEditingController(text: 'admin');
   ApiCall apiCall = ApiCall();
   @override
   void dispose() {
@@ -54,7 +56,7 @@ class _LoginBodyState extends State<LoginBody> {
             children: [
               Center(
                 child: Image.asset(
-                  'assets/logo.jpg',
+                  'assets/images/logo.jpg',
                   height: 250.h,
                 ),
               ),
@@ -110,7 +112,6 @@ class _LoginBodyState extends State<LoginBody> {
                   if (_formKey.currentState!.validate()) {
                     await apiCall.handleLogin(
                         context, email.text, password.text);
-                    print('validated');
                   }
                 },
               ),
